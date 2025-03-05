@@ -1,0 +1,91 @@
+class Task:
+    def __init__(self, task_id, title, description, priority, due_date):
+        self.task_id = task_id
+        self.title = title
+        self.description = description
+        self.priority = priority  # Lower value means higher priority
+        self.due_date = due_date  # Expected in 'YYYY-MM-DD' format
+
+    def update_description(self, new_description):
+        self.description = new_description
+
+    def update_priority(self, new_priority):
+        self.priority = new_priority
+
+    def __str__(self):
+        return f"Task ID: {self.task_id}, Title: {self.title}, Priority: {self.priority}, Due Date: {self.due_date}, Description: {self.description}"
+
+
+class TaskManager:
+    def __init__(self):
+        self.tasks = []  # List to store tasks
+
+    def add_task(self, task_id, title, description, priority, due_date):
+        task = Task(task_id, title, description, priority, due_date)
+        self.tasks.append(task)
+        self.sort_tasks()
+        print(f"Task '{title}' added successfully.")
+
+    def remove_task(self, task_id):
+        # Find task by ID and remove it
+        task_to_remove = next((task for task in self.tasks if task.task_id == task_id), None)
+        if task_to_remove:
+            self.tasks.remove(task_to_remove)
+            print(f"Task ID {task_id} removed successfully.")
+        else:
+            print(f"Task ID {task_id} not found.")
+
+    def update_task_description(self, task_id, new_description):
+        # Find task and update its description
+        task_to_update = next((task for task in self.tasks if task.task_id == task_id), None)
+        if task_to_update:
+            task_to_update.update_description(new_description)
+            print(f"Task ID {task_id} description updated.")
+        else:
+            print(f"Task ID {task_id} not found.")
+
+    def update_task_priority(self, task_id, new_priority):
+        # Find task and update its priority
+        task_to_update = next((task for task in self.tasks if task.task_id == task_id), None)
+        if task_to_update:
+            task_to_update.update_priority(new_priority)
+            self.sort_tasks()  # Re-sort tasks after priority update
+            print(f"Task ID {task_id} priority updated.")
+        else:
+            print(f"Task ID {task_id} not found.")
+
+    def sort_tasks(self):
+        # Sort tasks by priority (ascending order)
+        self.tasks.sort(key=lambda task: task.priority)
+
+    def get_all_tasks(self):
+        if not self.tasks:
+            print("No tasks available.")
+        for task in self.tasks:
+            print(task)
+
+
+# Example Usage
+task_manager = TaskManager()
+
+# Add tasks
+task_manager.add_task(1, "Complete Project Report", "Prepare the project report", 1, "2025-03-10")
+task_manager.add_task(2, "Team Meeting", "Discuss project progress", 3, "2025-03-06")
+task_manager.add_task(3, "Fix Bugs in Code", "Resolve critical bugs in the application", 2, "2025-03-05")
+
+# Update task description
+task_manager.update_task_description(1, "Prepare the final project report")
+
+# Update task priority
+task_manager.update_task_priority(2, 1)
+
+# Get all tasks (sorted by priority)
+print("\nAll Tasks:")
+task_manager.get_all_tasks()
+
+# Remove a task
+task_manager.remove_task(3)
+
+# Get tasks again after removal
+print("\nTasks after removal:")
+task_manager.get_all_tasks()
